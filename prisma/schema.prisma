@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  collegeId  String       @unique
+  email      String       @unique
+  phone      String?
+  address    String
+  image      String       @default("")
+  password   String
+  roomId     String       @db.ObjectId
+  criticalPoints Int @default(0)
+  room      Room         @relation(fields: [roomId], references: [id])
+  attendanceRecords Attendance[]
+  outpasses Outpass[]
+  out Boolean @default(false)
+  outType AttendanceType @default(INCAMPUS)
+}
+
+
+
+model Attendance {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  studentId  String          @db.ObjectId
+  student    Student         @relation(fields: [studentId], references: [id])
+  checkInAt  DateTime? @map("checkInAt")
+  checkOutAt DateTime?
+  type       AttendanceType
+  createdAt  DateTime        @default(now())
+  expectedIn DateTime?
+}
+
+model CareTaker {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String   @unique
+  phone             String
+  image String @default("")
+  hostelId          String?  @db.ObjectId
+  role ROLE @default(CARETAKER)
+  password          String
+  hostel            Hostel?  @relation("AllCaretakers", fields: [hostelId], references: [id], onDelete: SetNull)
+  outpasses Outpass[]
+}
+
+model Hostel {
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  name               String
+  rooms              Room[]
+  currentCaretakerId String? 
+  caretakers         CareTaker[]  @relation("AllCaretakers")
+  latitude          Float
+  longitude         Float
+}
+
+model Room {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  hostelId   String     @db.ObjectId
+  hostel     Hostel     @relation(fields: [hostelId], references: [id])
+  students   Student[]
+  quantity   Int?
+  @@unique([name, hostelId]) 
+}
+
+model Outpass{
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  studentId String @db.ObjectId
+  student Student @relation(fields: [studentId],references: [id])
+  from DateTime
+  to DateTime
+  purpose String?
+  letter String
+  createdAt DateTime @default(now())
+  caretakerId String? @db.ObjectId
+  caretaker CareTaker? @relation(fields: [caretakerId],references: [id])
+  status OUTPASS_STATUS @default(PENDING)
+  type OUTPASS_TYPE @default(OUTING)
+}
+
+enum AttendanceType {
+  INCAMPUS
+  OUTING
+  LEAVE
+}
+
+enum ROLE {
+  STUDENT
+  CARETAKER
+  ADMIN
+}
+enum OUTPASS_STATUS {
+  PENDING
+  REJECTED
+  APPROVED
+}
+
+enum OUTPASS_TYPE {
+  OUTING
+  LEAVE
+}
