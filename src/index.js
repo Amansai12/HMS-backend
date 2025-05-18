@@ -19,7 +19,7 @@ app.use(fileUpload({ useTempFiles: true, tempFileDir: '/tmp/' }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: 'http://localhost:5174', // Replace with your frontend URL
+  origin: ['http://localhost:5173','http://localhost:5174',process.env.FRONTEND_URL], // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
