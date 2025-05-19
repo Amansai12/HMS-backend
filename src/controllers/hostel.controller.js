@@ -8,6 +8,7 @@ const getHostels = async (req, res) => {
                 id:true,
                 rooms:{
                     select:{
+                        id:true,
                         name : true,
                         students:{
                             select:{
