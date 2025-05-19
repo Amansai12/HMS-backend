@@ -84,6 +84,7 @@ model Outpass {
   caretaker   CareTaker?     @relation(fields: [caretakerId], references: [id])
   status      OUTPASS_STATUS @default(PENDING)
   type        OUTPASS_TYPE   @default(OUTING)
+  active      Boolean        @default(false)
 }
 
 enum AttendanceType {

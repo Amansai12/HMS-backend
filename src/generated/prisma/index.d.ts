@@ -6809,6 +6809,7 @@ export namespace Prisma {
     caretakerId: string | null
     status: $Enums.OUTPASS_STATUS | null
     type: $Enums.OUTPASS_TYPE | null
+    active: boolean | null
   }
 
   export type OutpassMaxAggregateOutputType = {
@@ -6822,6 +6823,7 @@ export namespace Prisma {
     caretakerId: string | null
     status: $Enums.OUTPASS_STATUS | null
     type: $Enums.OUTPASS_TYPE | null
+    active: boolean | null
   }
 
   export type OutpassCountAggregateOutputType = {
@@ -6835,6 +6837,7 @@ export namespace Prisma {
     caretakerId: number
     status: number
     type: number
+    active: number
     _all: number
   }
 
@@ -6850,6 +6853,7 @@ export namespace Prisma {
     caretakerId?: true
     status?: true
     type?: true
+    active?: true
   }
 
   export type OutpassMaxAggregateInputType = {
@@ -6863,6 +6867,7 @@ export namespace Prisma {
     caretakerId?: true
     status?: true
     type?: true
+    active?: true
   }
 
   export type OutpassCountAggregateInputType = {
@@ -6876,6 +6881,7 @@ export namespace Prisma {
     caretakerId?: true
     status?: true
     type?: true
+    active?: true
     _all?: true
   }
 
@@ -6962,6 +6968,7 @@ export namespace Prisma {
     caretakerId: string | null
     status: $Enums.OUTPASS_STATUS
     type: $Enums.OUTPASS_TYPE
+    active: boolean
     _count: OutpassCountAggregateOutputType | null
     _min: OutpassMinAggregateOutputType | null
     _max: OutpassMaxAggregateOutputType | null
@@ -6992,6 +6999,7 @@ export namespace Prisma {
     caretakerId?: boolean
     status?: boolean
     type?: boolean
+    active?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     caretaker?: boolean | Outpass$caretakerArgs<ExtArgs>
   }, ExtArgs["result"]["outpass"]>
@@ -7009,9 +7017,10 @@ export namespace Prisma {
     caretakerId?: boolean
     status?: boolean
     type?: boolean
+    active?: boolean
   }
 
-  export type OutpassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "from" | "to" | "purpose" | "letter" | "createdAt" | "caretakerId" | "status" | "type", ExtArgs["result"]["outpass"]>
+  export type OutpassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "from" | "to" | "purpose" | "letter" | "createdAt" | "caretakerId" | "status" | "type" | "active", ExtArgs["result"]["outpass"]>
   export type OutpassInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     caretaker?: boolean | Outpass$caretakerArgs<ExtArgs>
@@ -7034,6 +7043,7 @@ export namespace Prisma {
       caretakerId: string | null
       status: $Enums.OUTPASS_STATUS
       type: $Enums.OUTPASS_TYPE
+      active: boolean
     }, ExtArgs["result"]["outpass"]>
     composites: {}
   }
@@ -7438,6 +7448,7 @@ export namespace Prisma {
     readonly caretakerId: FieldRef<"Outpass", 'String'>
     readonly status: FieldRef<"Outpass", 'OUTPASS_STATUS'>
     readonly type: FieldRef<"Outpass", 'OUTPASS_TYPE'>
+    readonly active: FieldRef<"Outpass", 'Boolean'>
   }
     
 
@@ -7925,7 +7936,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     caretakerId: 'caretakerId',
     status: 'status',
-    type: 'type'
+    type: 'type',
+    active: 'active'
   };
 
   export type OutpassScalarFieldEnum = (typeof OutpassScalarFieldEnum)[keyof typeof OutpassScalarFieldEnum]
@@ -8440,6 +8452,7 @@ export namespace Prisma {
     caretakerId?: StringNullableFilter<"Outpass"> | string | null
     status?: EnumOUTPASS_STATUSFilter<"Outpass"> | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFilter<"Outpass"> | $Enums.OUTPASS_TYPE
+    active?: BoolFilter<"Outpass"> | boolean
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     caretaker?: XOR<CareTakerNullableScalarRelationFilter, CareTakerWhereInput> | null
   }
@@ -8455,6 +8468,7 @@ export namespace Prisma {
     caretakerId?: SortOrder
     status?: SortOrder
     type?: SortOrder
+    active?: SortOrder
     student?: StudentOrderByWithRelationInput
     caretaker?: CareTakerOrderByWithRelationInput
   }
@@ -8473,6 +8487,7 @@ export namespace Prisma {
     caretakerId?: StringNullableFilter<"Outpass"> | string | null
     status?: EnumOUTPASS_STATUSFilter<"Outpass"> | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFilter<"Outpass"> | $Enums.OUTPASS_TYPE
+    active?: BoolFilter<"Outpass"> | boolean
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     caretaker?: XOR<CareTakerNullableScalarRelationFilter, CareTakerWhereInput> | null
   }, "id">
@@ -8488,6 +8503,7 @@ export namespace Prisma {
     caretakerId?: SortOrder
     status?: SortOrder
     type?: SortOrder
+    active?: SortOrder
     _count?: OutpassCountOrderByAggregateInput
     _max?: OutpassMaxOrderByAggregateInput
     _min?: OutpassMinOrderByAggregateInput
@@ -8507,6 +8523,7 @@ export namespace Prisma {
     caretakerId?: StringNullableWithAggregatesFilter<"Outpass"> | string | null
     status?: EnumOUTPASS_STATUSWithAggregatesFilter<"Outpass"> | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEWithAggregatesFilter<"Outpass"> | $Enums.OUTPASS_TYPE
+    active?: BoolWithAggregatesFilter<"Outpass"> | boolean
   }
 
   export type StudentCreateInput = {
@@ -8875,6 +8892,7 @@ export namespace Prisma {
     createdAt?: Date | string
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
     student: StudentCreateNestedOneWithoutOutpassesInput
     caretaker?: CareTakerCreateNestedOneWithoutOutpassesInput
   }
@@ -8890,6 +8908,7 @@ export namespace Prisma {
     caretakerId?: string | null
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type OutpassUpdateInput = {
@@ -8900,6 +8919,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
     student?: StudentUpdateOneRequiredWithoutOutpassesNestedInput
     caretaker?: CareTakerUpdateOneWithoutOutpassesNestedInput
   }
@@ -8914,6 +8934,7 @@ export namespace Prisma {
     caretakerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutpassCreateManyInput = {
@@ -8927,6 +8948,7 @@ export namespace Prisma {
     caretakerId?: string | null
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type OutpassUpdateManyMutationInput = {
@@ -8937,6 +8959,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutpassUncheckedUpdateManyInput = {
@@ -8949,6 +8972,7 @@ export namespace Prisma {
     caretakerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -9485,6 +9509,7 @@ export namespace Prisma {
     caretakerId?: SortOrder
     status?: SortOrder
     type?: SortOrder
+    active?: SortOrder
   }
 
   export type OutpassMaxOrderByAggregateInput = {
@@ -9498,6 +9523,7 @@ export namespace Prisma {
     caretakerId?: SortOrder
     status?: SortOrder
     type?: SortOrder
+    active?: SortOrder
   }
 
   export type OutpassMinOrderByAggregateInput = {
@@ -9511,6 +9537,7 @@ export namespace Prisma {
     caretakerId?: SortOrder
     status?: SortOrder
     type?: SortOrder
+    active?: SortOrder
   }
 
   export type EnumOUTPASS_STATUSWithAggregatesFilter<$PrismaModel = never> = {
@@ -10283,6 +10310,7 @@ export namespace Prisma {
     createdAt?: Date | string
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
     caretaker?: CareTakerCreateNestedOneWithoutOutpassesInput
   }
 
@@ -10296,6 +10324,7 @@ export namespace Prisma {
     caretakerId?: string | null
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type OutpassCreateOrConnectWithoutStudentInput = {
@@ -10389,6 +10418,7 @@ export namespace Prisma {
     caretakerId?: StringNullableFilter<"Outpass"> | string | null
     status?: EnumOUTPASS_STATUSFilter<"Outpass"> | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFilter<"Outpass"> | $Enums.OUTPASS_TYPE
+    active?: BoolFilter<"Outpass"> | boolean
   }
 
   export type StudentCreateWithoutAttendanceRecordsInput = {
@@ -10501,6 +10531,7 @@ export namespace Prisma {
     createdAt?: Date | string
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
     student: StudentCreateNestedOneWithoutOutpassesInput
   }
 
@@ -10514,6 +10545,7 @@ export namespace Prisma {
     createdAt?: Date | string
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type OutpassCreateOrConnectWithoutCaretakerInput = {
@@ -10958,6 +10990,7 @@ export namespace Prisma {
     caretakerId?: string | null
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type AttendanceUpdateWithoutStudentInput = {
@@ -10992,6 +11025,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
     caretaker?: CareTakerUpdateOneWithoutOutpassesNestedInput
   }
 
@@ -11004,6 +11038,7 @@ export namespace Prisma {
     caretakerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutpassUncheckedUpdateManyWithoutStudentInput = {
@@ -11015,6 +11050,7 @@ export namespace Prisma {
     caretakerId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutpassCreateManyCaretakerInput = {
@@ -11027,6 +11063,7 @@ export namespace Prisma {
     createdAt?: Date | string
     status?: $Enums.OUTPASS_STATUS
     type?: $Enums.OUTPASS_TYPE
+    active?: boolean
   }
 
   export type OutpassUpdateWithoutCaretakerInput = {
@@ -11037,6 +11074,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
     student?: StudentUpdateOneRequiredWithoutOutpassesNestedInput
   }
 
@@ -11049,6 +11087,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type OutpassUncheckedUpdateManyWithoutCaretakerInput = {
@@ -11060,6 +11099,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: EnumOUTPASS_STATUSFieldUpdateOperationsInput | $Enums.OUTPASS_STATUS
     type?: EnumOUTPASS_TYPEFieldUpdateOperationsInput | $Enums.OUTPASS_TYPE
+    active?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type RoomCreateManyHostelInput = {

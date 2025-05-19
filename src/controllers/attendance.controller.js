@@ -59,6 +59,156 @@ const giveAttendance = async (req, res) => {
         message: "Attendance unavailable, you are far from your hostel",
       });
     }
+    // const outpass = await prisma.outpass.findFirst({
+    //   where: {
+    //     studentId: student.id,
+    //     status: "APPROVED",
+    //   },
+    //   select:{
+    //     from:true,
+    //     to:true,
+    //     student:{
+    //         select:{
+    //             out : true
+    //         }
+    //     },
+    //     type : true,
+    //     id : true,
+    //     active : true
+    //   },
+    //   orderBy: {
+    //     createdAt: "desc",
+    //   },
+    // });
+    // const curr = new Date();
+
+    let attendance = await prisma.attendance.findFirst({
+      where: {
+        checkInAt: { equals: null },
+        studentId,
+      },
+    });
+
+    //if there is no active recent outpass that aligns our date
+    // if (outpass.from <= curr && outpass.to > curr && !outpass.student.out && !outpass.active) {
+    //         attendance = await prisma.attendance.create({
+    //             data: {
+    //               studentId,
+    //               checkOutAt: new Date(),
+    //               type: outpass.type,
+    //               checkInAt: null,
+    //             },
+    //           });
+    //           await prisma.student.update({
+    //             where: {
+    //               id: studentId,
+    //             },
+    //             data: {
+    //               out: true,
+    //               outType: outpass.type,
+    //             },
+    //           });
+    //           await prisma.outpass.update({
+    //             where : {
+    //                 id : outpass.id
+    //             },data : {
+    //                 active : true
+    //             }
+    //           })
+        
+    //     return res.status(200).json({
+    //       message: "Attendance given successfully",
+    //     });
+    //   }
+
+    if (attendance) {
+       
+      await prisma.attendance.update({
+        where: {
+          id: attendance.id,
+        },
+        data: {
+          checkInAt: new Date(),
+        },
+      });
+    //   await prisma.student.update({
+    //     where: {
+    //       id: studentId,
+    //     },
+    //     data: {
+    //       out: false,
+    //       outType : 'INCAMPUS'
+    //     },
+    //   });
+    } else {
+      
+      attendance = await prisma.attendance.create({
+        data: {
+          studentId,
+          checkOutAt: new Date(),
+          type: "INCAMPUS",
+          checkInAt: null,
+        },
+      });
+    //   await prisma.student.update({
+    //     where: {
+    //       id: studentId,
+    //     },
+    //     data: {
+    //       outType: "INCAMPUS",
+    //     },
+    //   });
+    }
+
+    return res.status(200).json({
+      message: "Attendance given successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+const giveOutpassAttendance = async (req, res) => {
+  const { latitude, longitude } = req.body;
+  try {
+    const studentId = req.userId;
+    const student = await prisma.student.findUnique({
+      where: {
+        id: studentId,
+      },
+      include: {
+        room: {
+          select: {
+            hostel: {
+              select: {
+                id: true,
+                latitude: true,
+                longitude: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!student) {
+      return res.status(400).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const HostelLatitude = student.room.hostel.latitude;
+    const HostelLongitude = student.room.hostel.longitude;
+
+    if (
+      !isWithin2Meters(HostelLatitude, HostelLongitude, latitude, longitude)
+    ) {
+      return res.status(400).json({
+        message: "Attendance unavailable, you are far from your hostel",
+      });
+    }
     const outpass = await prisma.outpass.findFirst({
       where: {
         studentId: student.id,
@@ -72,53 +222,32 @@ const giveAttendance = async (req, res) => {
                 out : true
             }
         },
-        type : true
+        type : true,
+        id : true,
       },
       orderBy: {
         createdAt: "desc",
       },
     });
-    const curr = new Date();
-
+    const curr = new Date()
+    if(!outpass || outpass.from > curr){
+        return res.status(400).json({
+            message : "No valid outpass"
+        })
+    }
     let attendance = await prisma.attendance.findFirst({
       where: {
         checkInAt: { equals: null },
         studentId,
+        OR : [
+            {type : 'LEAVE'},
+            {type : 'OUTING'}
+        ]
       },
     });
 
-    if (outpass.from <= curr && outpass.to > curr && !outpass.student.out) {
-            console.log("Hello")
-            attendance = await prisma.attendance.create({
-                data: {
-                  studentId,
-                  checkOutAt: new Date(),
-                  type: outpass.type,
-                  checkInAt: null,
-                },
-              });
-              await prisma.student.update({
-                where: {
-                  id: studentId,
-                },
-                data: {
-                  out: true,
-                  outType: outpass.type,
-                },
-              });
-        
-        return res.status(200).json({
-          message: "Attendance given successfully",
-        });
-      }
-
     if (attendance) {
-        // if(attendance.type == 'INCAMPUS'){
-        //     const curr = new Date()
-        //     if(curr.getTime() >= "11:00 PM"){
-                
-        //     }
-        // }
+       
       await prisma.attendance.update({
         where: {
           id: attendance.id,
@@ -142,7 +271,7 @@ const giveAttendance = async (req, res) => {
         data: {
           studentId,
           checkOutAt: new Date(),
-          type: "INCAMPUS",
+          type: outpass.type,
           checkInAt: null,
         },
       });
@@ -151,7 +280,8 @@ const giveAttendance = async (req, res) => {
           id: studentId,
         },
         data: {
-          outType: "INCAMPUS",
+          out : true,
+          outType: outpass.type,
         },
       });
     }
@@ -286,4 +416,4 @@ const getAttendances = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-module.exports = { giveAttendance, getAttendances };
+module.exports = { giveAttendance, getAttendances, giveOutpassAttendance };

@@ -54,7 +54,10 @@ async function getAttendanceTrends(startDate) {
       from: {
         gte: startDate
       },
-      status : 'APPROVED'
+      status : 'APPROVED',
+      student:{
+        out : true
+      }
     },
     include: {
       student: true
@@ -67,7 +70,7 @@ async function getAttendanceTrends(startDate) {
   // Group attendance by date and type
   const groupedByDate = dates.map(date => {
     const dayRecords = attendanceRecords.filter(record => 
-      format(record.createdAt, 'yyyy-MM-dd') === date
+      format(record.from, 'yyyy-MM-dd') === date
     );
     
     //const inCampus = dayRecords.filter(record => record.type === 'INCAMPUS').length;

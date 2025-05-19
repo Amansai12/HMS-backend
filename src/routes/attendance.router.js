@@ -2,6 +2,7 @@ const express = require("express");
 const {
   giveAttendance,
   getAttendances,
+  giveOutpassAttendance,
 } = require("../controllers/attendance.controller");
 const { verifyToken } = require("../middlewares/verifyToken");
 const { Parser } = require("json2csv");
@@ -11,6 +12,7 @@ const prisma = require("../database/db");
 const router = express.Router();
 
 router.post("/", verifyToken, giveAttendance);
+router.post("/outpass", verifyToken, giveOutpassAttendance);
 router.get("/", verifyToken, getAttendances);
 
 router.get("/export/:format", async (req, res) => {

@@ -174,7 +174,8 @@ exports.Prisma.OutpassScalarFieldEnum = {
   createdAt: 'createdAt',
   caretakerId: 'caretakerId',
   status: 'status',
-  type: 'type'
+  type: 'type',
+  active: 'active'
 };
 
 exports.Prisma.SortOrder = {
