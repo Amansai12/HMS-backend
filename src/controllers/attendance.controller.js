@@ -1,25 +1,31 @@
 const prisma = require("../database/db");
 const sendEmail = require("../utils/sendEmail");
 
-function isWithin2Meters(HostelLatitude, HostelLongitude, Latitude, Longitude) {
-  const toRad = (value) => (value * Math.PI) / 180;
-
-  const R = 6371000; // Earth's radius in meters
-  const dLat = toRad(Latitude - HostelLatitude);
-  const dLon = toRad(Longitude - HostelLongitude);
-
-  const lat1 = toRad(HostelLatitude);
-  const lat2 = toRad(Latitude);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-  return distance <= 2;
-}
-
+function isWithinDistance(
+    hostelLat,
+    hostelLon,
+    userLat, 
+    userLon,
+    maxDistance = 30 // meters (adjustable threshold)
+  ) {
+    const toRad = (value) => (value * Math.PI) / 180;
+  
+    const R = 6371000; // Earth's radius in meters
+    const dLat = toRad(userLat - hostelLat);
+    const dLon = toRad(userLon - hostelLon);
+  
+    const lat1 = toRad(hostelLat);
+    const lat2 = toRad(userLat);
+  
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+  
+    return distance <= maxDistance;
+  }
 const giveAttendance = async (req, res) => {
   const { latitude, longitude } = req.body;
   try {
@@ -53,35 +59,13 @@ const giveAttendance = async (req, res) => {
     const HostelLongitude = student.room.hostel.longitude;
 
     if (
-      !isWithin2Meters(HostelLatitude, HostelLongitude, latitude, longitude)
+      !isWithinDistance(HostelLatitude, HostelLongitude, latitude, longitude)
     ) {
       return res.status(400).json({
         message: "Attendance unavailable, you are far from your hostel",
       });
     }
-    // const outpass = await prisma.outpass.findFirst({
-    //   where: {
-    //     studentId: student.id,
-    //     status: "APPROVED",
-    //   },
-    //   select:{
-    //     from:true,
-    //     to:true,
-    //     student:{
-    //         select:{
-    //             out : true
-    //         }
-    //     },
-    //     type : true,
-    //     id : true,
-    //     active : true
-    //   },
-    //   orderBy: {
-    //     createdAt: "desc",
-    //   },
-    // });
-    // const curr = new Date();
-
+    
     let attendance = await prisma.attendance.findFirst({
       where: {
         checkInAt: { equals: null },
@@ -89,38 +73,7 @@ const giveAttendance = async (req, res) => {
       },
     });
 
-    //if there is no active recent outpass that aligns our date
-    // if (outpass.from <= curr && outpass.to > curr && !outpass.student.out && !outpass.active) {
-    //         attendance = await prisma.attendance.create({
-    //             data: {
-    //               studentId,
-    //               checkOutAt: new Date(),
-    //               type: outpass.type,
-    //               checkInAt: null,
-    //             },
-    //           });
-    //           await prisma.student.update({
-    //             where: {
-    //               id: studentId,
-    //             },
-    //             data: {
-    //               out: true,
-    //               outType: outpass.type,
-    //             },
-    //           });
-    //           await prisma.outpass.update({
-    //             where : {
-    //                 id : outpass.id
-    //             },data : {
-    //                 active : true
-    //             }
-    //           })
-        
-    //     return res.status(200).json({
-    //       message: "Attendance given successfully",
-    //     });
-    //   }
-
+  
     if (attendance) {
        
       await prisma.attendance.update({
@@ -131,15 +84,7 @@ const giveAttendance = async (req, res) => {
           checkInAt: new Date(),
         },
       });
-    //   await prisma.student.update({
-    //     where: {
-    //       id: studentId,
-    //     },
-    //     data: {
-    //       out: false,
-    //       outType : 'INCAMPUS'
-    //     },
-    //   });
+ 
     } else {
       
       attendance = await prisma.attendance.create({
@@ -150,18 +95,15 @@ const giveAttendance = async (req, res) => {
           checkInAt: null,
         },
       });
-    //   await prisma.student.update({
-    //     where: {
-    //       id: studentId,
-    //     },
-    //     data: {
-    //       outType: "INCAMPUS",
-    //     },
-    //   });
+
     }
 
     return res.status(200).json({
       message: "Attendance given successfully",
+      data : {
+        latitude,
+        longitude
+      }
     });
   } catch (err) {
     console.log(err);
