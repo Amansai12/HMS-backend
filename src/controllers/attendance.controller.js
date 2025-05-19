@@ -145,7 +145,7 @@ const giveOutpassAttendance = async (req, res) => {
     const HostelLongitude = student.room.hostel.longitude;
 
     if (
-      !isWithin2Meters(HostelLatitude, HostelLongitude, latitude, longitude)
+      !isWithinDistance(HostelLatitude, HostelLongitude, latitude, longitude)
     ) {
       return res.status(400).json({
         message: "Attendance unavailable, you are far from your hostel",
